@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 ##############################################################################################################
 # Functions to get the initial state of the eight puzzle from the user, check for repitition and solvability
@@ -154,8 +155,35 @@ goal_node = [1,2,3,4,5,6,7,8,0]
 print("The goal state in row wise representation is  : ", goal_node) 
 
 
+# function to write all the explored states in Nodes.txt
+def nodes_explored(node_explored):
+    if os.path.exists("Nodes.txt"):
+      os.remove("Nodes.txt")
+    
+    f = open('Nodes.txt', 'r+') 
+    for node in node_explored:
+        f.write(str(data) + '\n')
+    f.close()
 
+# function to write child node index, parent node index and cost in NodesInfo.txt
+def node_info(node_info):
+    if os.path.exists("NodesInfo.txt"):
+      os.remove("NodesInfo.txt")
+    
+    f = open('NodesInfo.txt', 'r+') 
+    for node in node_info:
+        f.write(str(data) + '\n')
+    f.close()
 
+# function to store all the steps from the start state to goal state in nodePath.txt
+def final_path_for_solving(node_path):
+    if os.path.exists("nodePath.txt"):
+      os.remove("nodePath.txt")
+    
+    f = open('nodePath.txt', 'r+') 
+    for node in node_path:
+        f.write(str(data) + '\n')
+    f.close()
 
 
 
