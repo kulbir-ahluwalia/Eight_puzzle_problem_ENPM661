@@ -145,14 +145,62 @@ def ActionMoveDown(node_zero_unmoved):
 
 
 
+
+
+
+
+# to initialise the list for storing information of each node
+# information like parent node number and node number of the node itself is stored
+node_info = []
+node_info.append([0,0])
+node_number = 1
+parent_node_number = 0
+
+
+
 start_node = initial_state()
 print("The initial state in row wise representation is  : ", start_node)    
 
-repetition_check(start_node)
-
-
 goal_node = [1,2,3,4,5,6,7,8,0]
 print("The goal state in row wise representation is  : ", goal_node) 
+
+# to initialise the list for all the nodes to be explored
+node_explore_list = []
+node_explore_list.append(start_node)
+
+for node_explore in node_explore_list:
+
+    possibility, node_zero_unmoved, node_zero_moved = ActionMoveLeft(node_explore)
+
+
+
+
+
+repetition_check(start_node)
+check_solvability(start_node)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # function to write all the explored states in Nodes.txt
