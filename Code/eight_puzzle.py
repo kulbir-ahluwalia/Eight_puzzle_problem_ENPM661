@@ -1,8 +1,8 @@
 import numpy as np
 
-####################################################################################################
-# Functions to take the initial state of the eight puzzle, check for repitition and solvability
-####################################################################################################
+##############################################################################################################
+# Functions to get the initial state of the eight puzzle from the user, check for repitition and solvability
+##############################################################################################################
 
 # Code to take initial state of the eight puzzle problem
 def initial_state():
@@ -49,9 +49,26 @@ def check_solvability(node_check):
     else:
         return False
 
+# Uncomment the following test code to print all the combinations for solvability check along with indexes
+# for x in range(len(start_node)):
+#     print("x is", x)
+#     for y in range(len(start_node[(x+1):])):
+#         print("y is", y)
+#         print("Upper range of y", len(start_node[(x+1):]))
+#         print(start_node[x],start_node[x+y+1])
+#         print("x+y+1 is: ",x+y+1)
+#         print("---------")
+
 ####################################################################################################
-# Functions to move the zero tile left, right, up and down
+# Functions to find the location of the blank tile, move it to the left, right, up and down
 ####################################################################################################
+
+# function to calculate the location of the zero tile and return the location as zero_position 
+def BlankTileLocation(input_node):  
+    for i in range(0,len(input_node)):           
+            if (input_node[i] == 0):
+                zero_position = i
+    return zero_position
 
 # function to move the blank (zero) tile left
 def ActionMoveLeft(node_zero_unmoved):
