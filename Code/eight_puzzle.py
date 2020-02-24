@@ -1,3 +1,6 @@
+# EIGHT PUZZLE PROBLEM
+# Kulbir Ahluwalia
+
 import numpy as np
 import os
 
@@ -77,7 +80,7 @@ def ActionMoveLeft(node_zero_unmoved):
     node_zero_moved = list(node_zero_unmoved)
     if zero_position in [0,3,6]:
         possibility = False
-        return possibility, node_zero_moved
+        return possibility, node_zero_unmoved, node_zero_moved
     else:
         node_zero_moved[zero_position] = node_zero_moved[zero_position-1]
         node_zero_moved[zero_position-1] = 0
@@ -90,7 +93,7 @@ def ActionMoveRight(node_zero_unmoved):
     node_zero_moved = list(node_zero_unmoved)
     if zero_position in [2,5,8]:
         possibility = False
-        return possibility, node_zero_moved
+        return possibility, node_zero_unmoved, node_zero_moved
     else:
         node_zero_moved[zero_position] = node_zero_moved[zero_position+1]
         node_zero_moved[zero_position+1] = 0
@@ -103,7 +106,7 @@ def ActionMoveUp(node_zero_unmoved):
     node_zero_moved = list(node_zero_unmoved)
     if zero_position in [0,1,2]:
         possibility = False
-        return possibility, node_zero_moved
+        return possibility, node_zero_unmoved, node_zero_moved
     else:
         node_zero_moved[zero_position] = node_zero_moved[zero_position-3]
         node_zero_moved[zero_position-3] = 0
@@ -116,7 +119,7 @@ def ActionMoveDown(node_zero_unmoved):
     node_zero_moved = list(node_zero_unmoved)
     if zero_position in [6,7,8]:
         possibility = False
-        return possibility, node_zero_moved
+        return possibility, node_zero_unmoved, node_zero_moved
     else:
         node_zero_moved[zero_position] = node_zero_moved[zero_position+3]
         node_zero_moved[zero_position+3] = 0
@@ -136,8 +139,7 @@ def node_already_explored_or_not(node_to_be_checked, node_explore_list):
         # stored_node is a node that has been explored before
         if stored_node == node_to_be_checked:
             return True
-    return False
- 
+    return False 
 
 def goal_state_reached(node_to_be_checked_with_goal_state):
     if node_to_be_checked_with_goal_state == goal_node:
@@ -146,39 +148,6 @@ def goal_state_reached(node_to_be_checked_with_goal_state):
     else:
         return False
 
-####################################################################################################
-# functions to generate the required text files Nodes.txt, NodesInfo.txt and nodePath.txt
-####################################################################################################
-
-# function to write all the explored states in Nodes.txt
-def nodes_explored(node_explored):
-    if os.path.exists("Nodes.txt"):
-      os.remove("Nodes.txt")
-    
-    f = open('Nodes.txt', 'r+') 
-    for node in node_explored:
-        f.write(str(data) + '\n')
-    f.close()
-
-# function to write child node index, parent node index and cost in NodesInfo.txt
-def node_info(node_info):
-    if os.path.exists("NodesInfo.txt"):
-      os.remove("NodesInfo.txt")
-    
-    f = open('NodesInfo.txt', 'r+') 
-    for node in node_info:
-        f.write(str(data) + '\n')
-    f.close()
-
-# function to store all the steps from the start state to goal state in nodePath.txt
-def final_path_for_solving(node_path):
-    if os.path.exists("nodePath.txt"):
-      os.remove("nodePath.txt")
-    
-    f = open('nodePath.txt', 'r+') 
-    for node in node_path:
-        f.write(str(data) + '\n')
-    f.close()
 
 ####################################################################################################
 # SECTION TO RUN THE CODE AND USE ALL THE FUNCTIONS WE MADE 
@@ -202,26 +171,185 @@ check_solvability(start_node)
 
 # information like *index of node i* and *index of the parent of node i* is stored
 Node_Index_i = 1
-Parent_Node_Index_i = 0
+Parent_Node_Index_start_node = 0 #initialised with zero since the first node does not have a parent
 
 # to initialise the list for storing information of each node
+# the information is stored as [Node_Index_i, Parent_Node_Index_i]
 node_info = []
-node_info.append([0,0])
-
+node_info.append([Node_Index_i,Parent_Node_Index_start_node])  #initialised with zero
 
 # to initialise the list of all the nodes to be explored. It is a list of lists.
 node_explore_list = []
 node_explore_list.append(start_node)
 
-for node_explore in node_explore_list:
+print("Working on finding the solution. Be patient for 2 minutes! :)")
 
-    possibility, node_zero_unmoved, node_zero_moved = ActionMoveLeft(node_explore)
+# for the subsequently generated nodes, parent index is 1 for the first generation of generated nodes
+Parent_Node_Index_i = 1
+
+for node_i in node_explore_list:
+    
+    # we will shift the zero tiles in the order left, up, right and then down
+    # we will also check if the movement is feasible or not
+    
+    ###########################################################################################
+    # SHIFT ZERO TILE TO THE LEFT
+    ###########################################################################################
+    possibility, node_zero_unmoved, node_zero_moved = ActionMoveLeft(node_i)    
+    # check if the new node has been explored before
+    node_explored_or_not = node_already_explored_or_not(node_zero_moved, node_explore_list)
+       
+    if (possibility == True) and (node_explored_or_not == False):        
+        #increment node index i for the new unexplored node
+        Node_Index_i = Node_Index_i + 1
+        # store the node index and its parent node's index
+        node_info.append([Node_Index_i, Parent_Node_Index_i])
+        # add the new node to the list of explored nodes        
+        node_explore_list.append(node_zero_moved)
+        
+    if (goal_state_reached(node_zero_moved) == True):
+        print("Goal state has been reached:  ", node_zero_moved)
+        break
+            
+    
+    
+    ###########################################################################################
+    # SHIFT ZERO TILE TO THE UP
+    ###########################################################################################
+    possibility, node_zero_unmoved, node_zero_moved = ActionMoveUp(node_i)    
+    # check if the new node has been explored before
+    node_explored_or_not = node_already_explored_or_not(node_zero_moved, node_explore_list)
+       
+    if (possibility == True) and (node_explored_or_not == False):        
+        #increment node index i for the new unexplored node
+        Node_Index_i = Node_Index_i + 1
+        # store the node index and its parent node's index
+        node_info.append([Node_Index_i, Parent_Node_Index_i])
+        # add the new node to the list of explored nodes        
+        node_explore_list.append(node_zero_moved)
+        
+    if (goal_state_reached(node_zero_moved) == True):
+        print("Goal state has been reached:  ", node_zero_moved)
+        break
+    
+
+    ###########################################################################################
+    # SHIFT ZERO TILE TO THE RIGHT
+    ###########################################################################################
+    possibility, node_zero_unmoved, node_zero_moved = ActionMoveRight(node_i)    
+    # check if the new node has been explored before
+    node_explored_or_not = node_already_explored_or_not(node_zero_moved, node_explore_list)
+       
+    if (possibility == True) and (node_explored_or_not == False):        
+        #increment node index i for the new unexplored node
+        Node_Index_i = Node_Index_i + 1
+        # store the node index and its parent node's index
+        node_info.append([Node_Index_i, Parent_Node_Index_i])
+        # add the new node to the list of explored nodes        
+        node_explore_list.append(node_zero_moved)
+        
+    if (goal_state_reached(node_zero_moved) == True):
+        print("Goal state has been reached:  ", node_zero_moved) 
+        break 
+            
+            
+    ###########################################################################################
+    # SHIFT ZERO TILE TO THE DOWN
+    ###########################################################################################
+    possibility, node_zero_unmoved, node_zero_moved = ActionMoveDown(node_i)    
+    # check if the new node has been explored before
+    node_explored_or_not = node_already_explored_or_not(node_zero_moved, node_explore_list)
+       
+    if (possibility == True) and (node_explored_or_not == False):        
+        #increment node index i for the new unexplored node
+        Node_Index_i = Node_Index_i + 1
+        # store the node index and its parent node's index
+        node_info.append([Node_Index_i, Parent_Node_Index_i])
+        # add the new node to the list of explored nodes        
+        node_explore_list.append(node_zero_moved)
+        
+    if (goal_state_reached(node_zero_moved) == True):
+        print("Goal state has been reached:  ", node_zero_moved)
+        break
+    
+    # Increment the index for the parent node after every possible movement for the zero tile is achieved
+    Parent_Node_Index_i = Parent_Node_Index_i + 1
+              
+# generate final path to goal
+final_path_to_goal = []
+# start the list with the node input by the user
+final_path_to_goal.append(start_node)
+# end the list with the goal node
+final_path_to_goal.append(goal_node)
+
+# find the total number of nodes generated for use in backtracking
+total_numer_of_nodes = len(node_info)
+# BACKTRACKING to generate the final path from start node to the goal node
+backtrack = node_info[total_numer_of_nodes-1][1]
+
+while backtrack != 1:
+    # to find the parent nodes
+    #print(backtrack)
+    final_path_to_goal.insert(1, node_explore_list[backtrack])
+    backtrack = node_info[backtrack][1]
+
+
+####################################################################################################
+# functions to generate the required text files Nodes.txt, NodesInfo.txt and nodePath.txt
+####################################################################################################
+
+# function to write all the explored states in Nodes.txt
+# we write it in the column wise format
+
+def nodes_explored(node_explored):
+    if os.path.exists("Nodes.txt"):
+        os.remove("Nodes.txt")
+    
+    f = open('Nodes.txt', 'w') 
+    for node in node_explored:
+        for i in range(3):
+            for j in range(i,9,3):
+                f.write(str(node[j]) + ' ')
+        f.write("\n")
+    
+    f.close()
+
+# function to write child node index, parent node index and cost in NodesInfo.txt
+# we write it in the column wise format
+def node_info_print(node_info):
+    if os.path.exists("NodesInfo.txt"):
+        os.remove("NodesInfo.txt")
+
+      
+    
+    f = open('NodesInfo.txt', 'w') 
+    for node in node_info:
+        for i in [0,1]:
+            f.write(str(node[i]) + ' ')
+        f.write(str(0))
+        f.write("\n")
+    f.close()
+
+# function to store all the steps from the start state to goal state in nodePath.txt
+# we write it in the column wise format
+
+def final_path_for_solving(node_path):
+    if os.path.exists("nodePath.txt"):
+        os.remove("nodePath.txt")
+    
+    f = open('nodePath.txt', 'w') 
+    for node in node_path:
+        for i in range(3):
+            for j in range(i,9,3):
+                f.write(str(node[j]) + ' ')
+        f.write("\n")
+    f.close()
 
 
 
-
-
-
+nodes_explored(node_explore_list)
+node_info_print(node_info)
+final_path_for_solving(final_path_to_goal)
 
 
 
