@@ -11,6 +11,7 @@
 ## Libraries used in the code
 1. **os** - It is used to remove any pre existing files with the same name and start afresh.
 
+The test code folder contains jupyter notebooks used in the making of the code.
 Code is commented at every function.
 
 
