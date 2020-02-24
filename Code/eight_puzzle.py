@@ -124,84 +124,31 @@ def ActionMoveDown(node_zero_unmoved):
         return possibility, node_zero_unmoved, node_zero_moved
 
 
+####################################################################################################
+# Functions to compare nodes and stop when the goal_state is reached
+####################################################################################################
 
+# function to compare two nodes and make sure that the"node_to_checked" has not been explored before
+# node from the node_explore_list is compared with the node passed to the function "compare_nodes"
 
+def node_already_explored_or_not(node_to_be_checked, node_explore_list):
+    for stored_node in node_explore_list:
+        # stored_node is a node that has been explored before
+        if stored_node == node_to_be_checked:
+            return True
+    return False
+ 
 
+def goal_state_reached(node_to_be_checked_with_goal_state):
+    if node_to_be_checked_with_goal_state == goal_node:
+        return True
 
+    else:
+        return False
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# to initialise the list for storing information of each node
-# information like parent node number and node number of the node itself is stored
-node_info = []
-node_info.append([0,0])
-node_number = 1
-parent_node_number = 0
-
-
-
-start_node = initial_state()
-print("The initial state in row wise representation is  : ", start_node)    
-
-goal_node = [1,2,3,4,5,6,7,8,0]
-print("The goal state in row wise representation is  : ", goal_node) 
-
-# to initialise the list for all the nodes to be explored
-node_explore_list = []
-node_explore_list.append(start_node)
-
-for node_explore in node_explore_list:
-
-    possibility, node_zero_unmoved, node_zero_moved = ActionMoveLeft(node_explore)
-
-
-
-
-
-repetition_check(start_node)
-check_solvability(start_node)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+####################################################################################################
+# functions to generate the required text files Nodes.txt, NodesInfo.txt and nodePath.txt
+####################################################################################################
 
 # function to write all the explored states in Nodes.txt
 def nodes_explored(node_explored):
@@ -232,6 +179,48 @@ def final_path_for_solving(node_path):
     for node in node_path:
         f.write(str(data) + '\n')
     f.close()
+
+####################################################################################################
+# SECTION TO RUN THE CODE AND USE ALL THE FUNCTIONS WE MADE 
+####################################################################################################
+
+# take input state of the eight puzzle from the user with values from [0,8]
+start_node = initial_state()
+print("The initial state in row wise representation is  : ", start_node)    
+
+goal_node = [1,2,3,4,5,6,7,8,0]
+print("The goal state in row wise representation is  : ", goal_node) 
+
+# to check for repetition and solvability of the input state of the eight puzzle problem
+# the program exits if any of the following functions fails
+
+# to check for repetitive entries
+repetition_check(start_node)
+# to check if the input state of the eight puzzle is solvable or not
+check_solvability(start_node)
+
+
+# information like *index of node i* and *index of the parent of node i* is stored
+Node_Index_i = 1
+Parent_Node_Index_i = 0
+
+# to initialise the list for storing information of each node
+node_info = []
+node_info.append([0,0])
+
+
+# to initialise the list of all the nodes to be explored. It is a list of lists.
+node_explore_list = []
+node_explore_list.append(start_node)
+
+for node_explore in node_explore_list:
+
+    possibility, node_zero_unmoved, node_zero_moved = ActionMoveLeft(node_explore)
+
+
+
+
+
 
 
 
