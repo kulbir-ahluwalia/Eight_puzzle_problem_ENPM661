@@ -1,4 +1,4 @@
-# EIGHT PUZZLE PROBLEM
+ # EIGHT PUZZLE PROBLEM
 # Kulbir Ahluwalia
 
 import numpy as np
@@ -24,7 +24,7 @@ def initial_state():
 
 # Code to check for repetition of numbers
 def repetition_check(node_for_check):  
-    for x in range(9):  
+    for x in range(9):
         no_of_repetition = 0      
         entry = node_for_check[x]
         for y in range(9):
@@ -51,7 +51,9 @@ def check_solvability(node_check):
     if inversions % 2 == 0:
         return True
     else:
+        exit(0)
         return False
+
 
 # Uncomment the following test code to print all the combinations for solvability check along with indexes
 # for x in range(len(start_node)):
